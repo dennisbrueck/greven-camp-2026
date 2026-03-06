@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Greven Camp 2026 – Anmeldung</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<style>
+  :root {
+    --blue-dark: #091e4a;
+    --blue-mid: #1240ab;
+    --blue-bright: #1e90ff;
+    --white: #ffffff;
+    --gold: #ffd700;
+    --gold-light: #ffe566;
+    --gray-light: #f0f4ff;
+    --gray-mid: #c5d0e8;
+    --text: #0d1b3e;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--blue-dark);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Animated background stars */
+  .stars {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    background: white;
+    animation: twinkle var(--dur, 3s) ease-in-out infinite var(--delay, 0s);
+    opacity: 0;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0; transform: scale(0.5); }
+    50% { opacity: var(--bright, 0.8); transform: scale(1); }
+  }
+
+  /* Firework bursts in background */
+  .firework-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .burst {
+    position: absolute;
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    animation: burst-anim var(--bdur, 4s) ease-out infinite var(--bdelay, 0s);
+    opacity: 0;
+  }
+  @keyframes burst-anim {
+    0% { transform: translate(0,0) scale(0); opacity: 1; }
+    80% { opacity: 0.6; }
+    100% { transform: translate(var(--bx, 60px), var(--by, -80px)) scale(0); opacity: 0; }
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    padding: 30px 16px 60px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 740px;
+    background: var(--white);
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,30,0.6), 0 0 0 2px rgba(255,215,0,0.3);
+    animation: card-in 0.7s cubic-bezier(0.22,1,0.36,1) both;
+  }
+  @keyframes card-in {
+    from { opacity: 0; transform: translateY(40px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* HERO HEADER */
+  .hero {
+    background: linear-gradient(160deg, #091e4a 0%, #1240ab 60%, #1e90ff 100%);
+    padding: 40px 30px 36px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 120%, rgba(255,215,0,0.18) 0%, transparent 70%);
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--blue-dark);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    padding: 5px 16px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+    position: relative;
+    box-shadow: 0 0 20px rgba(255,215,0,0.5);
+  }
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px, 8vw, 72px);
+    color: var(--white);
+    line-height: 1;
+    letter-spacing: 3px;
+    position: relative;
+    text-shadow: 0 0 40px rgba(30,144,255,0.6);
+  }
+  .hero h1 span {
+    color: var(--gold);
+    display: block;
+    text-shadow: 0 0 30px rgba(255,215,0,0.7);
+  }
+  .hero-sub {
+    margin-top: 12px;
+    color: rgba(255,255,255,0.75);
+    font-size: 15px;
+    font-weight: 600;
+    position: relative;
+    letter-spacing: 1px;
+  }
+  .hero-emojis {
+    font-size: 28px;
+    margin-top: 10px;
+    position: relative;
+  }
+
+  /* Floating balls decoration */
+  .ball {
+    position: absolute;
+    font-size: 22px;
+    opacity: 0.15;
+    animation: float var(--fdur, 6s) ease-in-out infinite var(--fdelay, 0s);
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-18px) rotate(180deg); }
+  }
+
+  /* PROGRESS */
+  .progress-wrap {
+    background: var(--gray-light);
+    padding: 18px 28px 14px;
+    border-bottom: 1px solid #e4eaf8;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--blue-mid);
+    letter-spacing: 0.5px;
+  }
+  .progress-pct {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: var(--blue-dark);
+  }
+  .progressbar {
+    height: 10px;
+    background: var(--gray-mid);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .progress {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--blue-mid), var(--blue-bright), var(--gold));
+    border-radius: 10px;
+    transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+    box-shadow: 0 0 10px rgba(30,144,255,0.5);
+  }
+
+  /* BODY */
+  .form-body {
+    padding: 28px 32px 36px;
+  }
+
+  /* SECTION */
+  .section {
+    margin-bottom: 32px;
+    animation: section-in 0.5s ease both;
+  }
+  @keyframes section-in {
+    from { opacity: 0; transform: translateX(-12px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e4eaf8;
+  }
+  .section-icon {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--blue-mid), var(--blue-bright));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(18,64,171,0.3);
+  }
+  .section-title h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--blue-dark);
+    letter-spacing: 1.5px;
+  }
+
+  /* INPUTS */
+  label.field-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--blue-mid);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  input[type=text], select, textarea {
+    width: 100%;
+    padding: 13px 16px;
+    border: 2px solid #dde5f5;
+    border-radius: 12px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    color: var(--text);
+    background: var(--gray-light);
+    transition: border 0.2s, box-shadow 0.2s, background 0.2s;
+    outline: none;
+    margin-bottom: 18px;
+  }
+  input[type=text]:focus, select:focus, textarea:focus {
+    border-color: var(--blue-bright);
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(30,144,255,0.12);
+  }
+  textarea { resize: vertical; min-height: 80px; }
+
+  /* CHECKBOX GROUP */
+  .checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--gray-light);
+    border: 2px solid #dde5f5;
+    padding: 10px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .checkbox-group label:hover {
+    border-color: var(--blue-bright);
+    background: #e8f2ff;
+  }
+  .checkbox-group input[type=checkbox] {
+    width: 18px; height: 18px;
+    accent-color: var(--blue-mid);
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+  }
+  .checkbox-group label:has(input:checked) {
+    background: linear-gradient(135deg, #e8f2ff, #d0e4ff);
+    border-color: var(--blue-mid);
+    color: var(--blue-dark);
+    box-shadow: 0 2px 8px rgba(18,64,171,0.15);
+  }
+
+  /* HIDDEN */
+  .hidden { display: none; }
+
+  /* SUBMIT BUTTON */
+  .btn-submit {
+    width: 100%;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue-mid) 60%, var(--blue-bright) 100%);
+    color: var(--white);
+    border: none;
+    border-radius: 16px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 8px 30px rgba(18,64,171,0.4);
+    margin-top: 10px;
+  }
+  .btn-submit::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 40%, rgba(255,215,0,0.15));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .btn-submit:hover::before { opacity: 1; }
+  .btn-submit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 40px rgba(18,64,171,0.55);
+  }
+  .btn-submit:active { transform: translateY(0); }
+
+  .btn-submit .btn-icon { font-size: 22px; margin-right: 8px; }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 20px 20px 28px;
+    font-size: 13px;
+    color: #8899bb;
+    border-top: 1px solid #e4eaf8;
+    font-weight: 600;
+  }
+  .footer strong { color: var(--blue-mid); }
+
+  /* FIREWORK LAUNCH OVERLAY */
+  #launch-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(9,30,74,0.92);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+  }
+  #launch-overlay.active { display: flex; }
+  .launch-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 8vw, 72px);
+    color: var(--gold);
+    letter-spacing: 4px;
+    text-align: center;
+    animation: pulse-text 0.6s ease-in-out infinite alternate;
+    text-shadow: 0 0 40px rgba(255,215,0,0.8);
+  }
+  @keyframes pulse-text {
+    from { transform: scale(1); }
+    to   { transform: scale(1.05); }
+  }
+  .launch-sub {
+    color: rgba(255,255,255,0.7);
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  @media (max-width: 540px) {
+    .form-body { padding: 20px 18px 28px; }
+    .hero { padding: 30px 20px 28px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Starfield -->
+<div class="stars" id="stars"></div>
+
+<!-- Firework background bursts -->
+<div class="firework-bg" id="firework-bg"></div>
+
+<!-- Launch overlay -->
+<div id="launch-overlay">
+  <div class="launch-text">🎆 ABGESCHICKT! 🎆</div>
+  <div class="launch-sub">Weiterleitung läuft…</div>
+</div>
+
+<div class="wrapper">
+  <div class="card">
+
+    <!-- HERO -->
+    <div class="hero">
+      <!-- Floating footballs -->
+      <div class="ball" style="top:15%;left:8%;--fdur:5s;--fdelay:0s">⚽</div>
+      <div class="ball" style="top:40%;left:3%;--fdur:7s;--fdelay:1s">⚽</div>
+      <div class="ball" style="top:20%;right:6%;--fdur:6s;--fdelay:0.5s">⚽</div>
+      <div class="ball" style="top:60%;right:4%;--fdur:8s;--fdelay:2s">⛺</div>
+
+      <div class="hero-badge">SOMMERCAMP & FUSSBALLTURNIER 2026</div>
+      <h1>GREVEN<span>#LEVELUP</span></h1>
+      <div class="hero-sub">Blau Weiß Westfalia Langenbochum – E3</div>
+      <div class="hero-emojis">⚽ ⛺ 🏆 🌟</div>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>Formular ausfüllen</span>
+        <span class="progress-pct" id="progressText">0%</span>
+      </div>
+      <div class="progressbar">
+        <div class="progress" id="progress"></div>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <!-- 
+      BUGFIX #1: form id war "anmeldungForm", feiern() suchte "formular" → jetzt id="formular"
+      BUGFIX #2: _next input war AUSSERHALB des <form> Tags → jetzt drin
+      FormSubmit.co versendet die Mail automatisch, kein Backend nötig!
+    -->
+    <form id="formular"
+          action="https://formsubmit.co/DENNIS.BRUECK@YAHOO.DE"
+          method="POST">
+
+      <input type="hidden" name="_subject" value="⚽ Neue Anmeldung – Sommerturnier Greven 2026">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_next" value="danke.html">
+
+      <div class="form-body">
+
+        <!-- Elternteil -->
+        <div class="section">
+          <div class="section-title">
+            <div class="section-icon">👨‍👩‍👦</div>
+            <h2>Elternteil</h2>
+          </div>
+          <label class="field-label">Name des Elternteils</label>
+          <input type="text" name="Elternteil" placeholder="Vor- und Nachname" required>
+        </div>
+
+        <!-- Spieler -->
+        <div class="section">
+          <div class="section-title">
+            <div class="section-icon">⚽</div>
+            <h2>Spieler</h2>
+          </div>
+          <label class="field-label">Name des Kindes</label>
+          <input type="text" name="Spielername" placeholder="Vor- und Nachname" required>
+
+          <label class="field-label">Teilnahme</label>
+          <select name="Teilnahme" onchange="checkTeilnahme(this.value)" required>
+            <option value="">– bitte wählen –</option>
+            <option>Mein Kind nimmt teil</option>
+            <option>Mein Kind kann nicht teilnehmen</option>
+            <option>Sonstiges</option>
+          </select>
+
+          <div id="sonstigesfeld" class="hidden">
+            <label class="field-label">Besonderheiten</label>
+            <textarea name="Besonderheiten" placeholder="z.B. nur Freitag / Zuschauer Sonntag"></textarea>
+          </div>
+        </div>
+
+        <!-- Übernachtung -->
+        <div class="section">
+          <div class="section-title">
+            <div class="section-icon">🌙</div>
+            <h2>Übernachtung</h2>
+          </div>
+          <div class="checkbox-group">
+            <label><input type="checkbox" name="Freitag_Samstag" value="Ja"> Freitag → Samstag</label>
+            <label><input type="checkbox" name="Samstag_Sonntag" value="Ja"> Samstag → Sonntag</label>
+          </div>
+        </div>
+
+        <!-- Zelt -->
+        <div class="section">
+          <div class="section-title">
+            <div class="section-icon">⛺</div>
+            <h2>Zelt vorhanden</h2>
+          </div>
+          <label class="field-label">Zeltgröße</label>
+          <select name="Zelt">
+            <option value="">– bitte wählen –</option>
+            <option>Kein Zelt</option>
+            <option>2 Personen Zelt</option>
+            <option>3 Personen Zelt</option>
+            <option>4 Personen Zelt</option>
+            <option>5 Personen Zelt</option>
+            <option>6 Personen Zelt</option>
+            <option>7 Personen Zelt</option>
+            <option>8 Personen Zelt</option>
+            <option>9 Personen Zelt</option>
+            <option>10 Personen Zelt</option>
+          </select>
+        </div>
+
+        <!-- Fahrgemeinschaft -->
+        <div class="section">
+          <div class="section-title">
+            <div class="section-icon">🚗</div>
+            <h2>Fahrgemeinschaft</h2>
+          </div>
+          <label class="field-label">Wunsch Abfahrtzeit</label>
+          <select name="Abfahrtszeit">
+            <option>14:00 Uhr</option>
+            <option>14:30 Uhr</option>
+            <option>15:00 Uhr</option>
+            <option>15:30 Uhr</option>
+          </select>
+
+          <label class="field-label">Freie Plätze im Auto</label>
+          <select name="Plaetze">
+            <option value="">– bitte wählen –</option>
+            <option>Keine</option>
+            <option>1 Platz</option>
+            <option>2 Plätze</option>
+            <option>3 Plätze</option>
+            <option>4 Plätze</option>
+          </select>
+        </div>
+
+        <!-- Unterstützung -->
+        <div class="section">
+          <div class="section-title">
+            <div class="section-icon">🍎</div>
+            <h2>Unterstützung</h2>
+          </div>
+          <label class="field-label">Was könnt ihr mitbringen?</label>
+          <div class="checkbox-group">
+            <label><input type="checkbox" name="Obst" value="Ja"> 🍊 Obst</label>
+            <label><input type="checkbox" name="Gemuese" value="Ja"> 🥦 Gemüse</label>
+            <label><input type="checkbox" name="Riegel" value="Ja"> 🍫 Müsliriegel</label>
+            <label><input type="checkbox" name="Knabber" value="Ja"> 🥨 Knabberzeug</label>
+          </div>
+
+          <label class="field-label">An welchem Tag?</label>
+          <div class="checkbox-group">
+            <label><input type="checkbox" name="Freitag" value="Ja"> Freitag</label>
+            <label><input type="checkbox" name="Samstag" value="Ja"> Samstag</label>
+            <label><input type="checkbox" name="Sonntag" value="Ja"> Sonntag</label>
+          </div>
+        </div>
+
+        <!-- Allergien -->
+        <div class="section">
+          <div class="section-title">
+            <div class="section-icon">⚠️</div>
+            <h2>Allergien / Hinweise</h2>
+          </div>
+          <label class="field-label">Besondere Hinweise</label>
+          <textarea name="Hinweise" placeholder="Allergien, Medikamente, sonstige Hinweise…"></textarea>
+        </div>
+
+        <!-- Submit -->
+        <button type="button" class="btn-submit" onclick="feiern()">
+          <span class="btn-icon">🎆</span>
+          ANMELDUNG ABSCHICKEN
+          <span class="btn-icon">⚽</span>
+        </button>
+
+      </div>
+    </form>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <strong>Blau Weiß Westfalia Langenbochum – E3</strong><br>
+      Orga: Sebastian Krieg &amp; Dennis Brück
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ── Generate starfield ──────────────────────────────────────────
+  (function(){
+    const container = document.getElementById('stars');
+    for(let i=0;i<120;i++){
+      const s = document.createElement('div');
+      s.className = 'star';
+      const size = Math.random()*3+1;
+      s.style.cssText = `
+        width:${size}px;height:${size}px;
+        top:${Math.random()*100}%;left:${Math.random()*100}%;
+        --dur:${2+Math.random()*4}s;
+        --delay:${Math.random()*5}s;
+        --bright:${0.4+Math.random()*0.6};
+      `;
+      container.appendChild(s);
+    }
+  })();
+
+  // ── Generate bg firework sparks ─────────────────────────────────
+  (function(){
+    const container = document.getElementById('firework-bg');
+    const colors = ['#ffd700','#1e90ff','#fff','#ff6b6b','#4eff91'];
+    for(let i=0;i<60;i++){
+      const b = document.createElement('div');
+      b.className = 'burst';
+      const angle = Math.random()*360;
+      const dist = 40+Math.random()*120;
+      const rad = angle*Math.PI/180;
+      b.style.cssText = `
+        top:${10+Math.random()*80}%;
+        left:${5+Math.random()*90}%;
+        background:${colors[Math.floor(Math.random()*colors.length)]};
+        --bdur:${3+Math.random()*5}s;
+        --bdelay:${Math.random()*6}s;
+        --bx:${Math.cos(rad)*dist}px;
+        --by:${Math.sin(rad)*dist}px;
+        width:${2+Math.random()*3}px;
+        height:${2+Math.random()*3}px;
+        box-shadow:0 0 6px currentColor;
+      `;
+      container.appendChild(b);
+    }
+  })();
+
+  // ── Progress bar ────────────────────────────────────────────────
+  function updateProgress(){
+    const fields = document.querySelectorAll("input[type=text], select, textarea");
+    let filled = 0;
+    fields.forEach(el => { if(el.value.trim() !== '') filled++; });
+    const pct = Math.round((filled/fields.length)*100);
+    document.getElementById('progress').style.width = pct + '%';
+    document.getElementById('progressText').innerText = pct + '%';
+  }
+  document.addEventListener('input', updateProgress);
+  document.addEventListener('change', updateProgress);
+
+  // ── Sonstiges field toggle ──────────────────────────────────────
+  function checkTeilnahme(value){
+    document.getElementById('sonstigesfeld').style.display =
+      value === 'Sonstiges' ? 'block' : 'none';
+    updateProgress();
+  }
+
+  // ── FIREWORK SUBMIT ─────────────────────────────────────────────
+  function feiern(){
+    // Show overlay
+    document.getElementById('launch-overlay').classList.add('active');
+
+    // Multi-burst confetti sequence
+    const duration = 3200;
+    const end = Date.now() + duration;
+
+    const colors = ['#ffd700','#1e90ff','#ffffff','#091e4a','#ff4444','#44ff88'];
+
+    function frame(){
+      confetti({
+        particleCount: 6,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0, y: 0.7 },
+        colors: colors
+      });
+      confetti({
+        particleCount: 6,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1, y: 0.7 },
+        colors: colors
+      });
+      confetti({
+        particleCount: 4,
+        angle: 90,
+        spread: 80,
+        origin: { x: 0.5, y: 0.5 },
+        colors: colors,
+        startVelocity: 45
+      });
+      if(Date.now() < end) requestAnimationFrame(frame);
+    }
+    frame();
+
+    // Big center burst
+    setTimeout(()=>{
+      confetti({
+        particleCount: 200,
+        spread: 100,
+        origin: { x: 0.5, y: 0.4 },
+        colors: colors,
+        startVelocity: 60,
+        gravity: 0.8
+      });
+    }, 400);
+
+    // Submit form after fireworks
+    setTimeout(()=>{
+      document.getElementById('formular').submit();
+    }, 2800);
+  }
+</script>
+
+</body>
+</html>
